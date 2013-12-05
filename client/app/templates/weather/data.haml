@@ -1,0 +1,9 @@
+%h3= "It is currently #{@data.weather}."
+
+%ul
+  %li= "Temp - #{@data.temp_f} F"
+  %li= "Feels like - #{@data.feelslike_f} F"
+  %li= "Wind speed - #{@data.wind_mph} mph"
+  %li= "Today's Precipitation - " |
+    + "#{if @data.precip_today_in < 0 then 0 else @data.precip_today_in}" |
+    + " inches" |

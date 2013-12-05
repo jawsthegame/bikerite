@@ -1,0 +1,3 @@
+*.pyc
+client/public/application.*
+node_modules
