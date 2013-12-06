@@ -1,5 +1,8 @@
-%h3= "It is currently #{@data.weather}."
+%h3= "The weather is currently #{@data.weather}."
   %img.weather-icon{src: @data.icon_url}
+
+-if @data.warning
+  %p{class: @data.warning[0]}= @data.warning[1]
 
 %p= "You should probably wear #{@data.wear}."
 

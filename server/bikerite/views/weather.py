@@ -10,12 +10,26 @@ weather = Blueprint('weather', __name__)
 def get_weather_by_position(lat, lon):
   data = get_weather(lon, lat)
   data['wear'] = _get_wear(data)
+  data['warning'] = _get_warning(data)
   if data['precip_today_in'] < 0:
     data['precip_today_in'] = 0
   return dumps(data)
 
+def _get_warning(data):
+  weather = data['weather'].lower()
+
+  maybe = ['light drizzle', 'light rain', 'light snow']
+  avoid = ['heavy', 'ice', 'thunderstorm']
+
+  if [m for m in maybe if m in weather]:
+    return ['warn', 'If you have to bike, be careful out there!']
+
+  if [av for av in avoid if av in weather]:
+    return ['avoid', 'I would seriously recommend you do not ride today.']
+
 def _get_wear(data):
   temp = data['temp_f']
+  wind = data['wind_mph']
 
   TSHIRT  = 'a t-shirt'
   SHORTS  = 'shorts'
@@ -28,23 +42,26 @@ def _get_wear(data):
   SCARF   = 'a scarf'
   HEAVY_C = 'a heavy coat'
   WOOL_H  = 'a wool hat'
+  BALACL  = 'a balaclava'
 
   if temp > 70:
     wear = [TSHIRT, SHORTS]
   elif temp > 65:
     wear = [TSHIRT, JEANS]
   elif temp > 60:
-    wear = [LONG_SL, JEANS]
-  elif temp > 55:
     wear = [HOODIE, JEANS]
-  elif temp > 48:
+  elif temp > 55:
     wear = [HOODIE, LIGHT_J, JEANS]
-  elif temp > 34:
+  elif temp > 48:
     wear = [HOODIE, MED_J, JEANS, GLOVES]
-  elif temp > 30:
-    wear = [HEAVY_C, GLOVES, SCARF, JEANS]
+  elif temp > 34 and wind < 5:
+    wear = [HOODIE, MED_J, JEANS, SCARF, GLOVES]
+  elif temp > 34:
+    wear = [HOODIE, MED_J, JEANS, SCARF, GLOVES, WOOL_H]
+  elif temp > 26 and wind < 5:
+    wear = [HEAVY_C, JEANS, SCARF, GLOVES, WOOL_H]
   else:
-    wear = [HEAVY_C, GLOVES, SCARF, JEANS, WOOL_H]
+    wear = [HEAVY_C, GLOVES, SCARF, JEANS, BALACL]
 
   return _format_list(wear)
 

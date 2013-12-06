@@ -20,7 +20,7 @@ class App
     Backbone.history.start()
 
     unless window.location.hash
-      Backbone.history.navigate '#/weather'
+      Backbone.history.navigate '#/weather/'
 
 
 module.exports = App
