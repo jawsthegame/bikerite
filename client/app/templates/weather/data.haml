@@ -1,9 +1,18 @@
 %h3= "It is currently #{@data.weather}."
+  %img.weather-icon{src: @data.icon_url}
 
-%ul
-  %li= "Temp - #{@data.temp_f} F"
-  %li= "Feels like - #{@data.feelslike_f} F"
-  %li= "Wind speed - #{@data.wind_mph} mph"
-  %li= "Today's Precipitation - " |
-    + "#{if @data.precip_today_in < 0 then 0 else @data.precip_today_in}" |
-    + " inches" |
+%p= "You should probably wear #{@data.wear}."
+
+%table.horizontal
+  %tr
+    %td Temp
+    %td= "#{@data.temp_f} F"
+  %tr
+    %td Feels like
+    %td= "#{@data.feelslike_f} F"
+  %tr
+    %td Wind speed
+    %td= "#{@data.wind_mph} mph"
+  %tr
+    %td Today's Precipitation
+    %td= "#{@data.precip_today_in} inches"
