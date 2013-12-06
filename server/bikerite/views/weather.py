@@ -19,7 +19,8 @@ def _get_warning(data):
   weather = data['weather'].lower()
 
   maybe = ['light drizzle', 'light rain', 'light snow']
-  avoid = ['heavy', 'ice', 'thunderstorm']
+  avoid = ['heavy', 'ice', 'thunderstorm', 'freezing', 'blowing',
+    'showers', 'hail']
 
   if [m for m in maybe if m in weather]:
     return ['warn', 'If you have to bike, be careful out there!']
