@@ -6,6 +6,9 @@ from bikerite.lib.wunderground import get_weather
 
 weather = Blueprint('weather', __name__)
 
+WARN  = 'If you have to bike, be careful out there!'
+AVOID = 'I would seriously recommend you do not ride today.'
+
 @weather.route("/<lat>,<lon>")
 def get_weather_by_position(lat, lon):
   data = get_weather(lon, lat)
@@ -17,16 +20,19 @@ def get_weather_by_position(lat, lon):
 
 def _get_warning(data):
   weather = data['weather'].lower()
+  temp    = data['temp_f']
+  wind    = data['wind_mph']
 
   maybe = ['light drizzle', 'light rain', 'light snow']
   avoid = ['heavy', 'ice', 'thunderstorm', 'freezing', 'blowing',
-    'showers', 'hail']
+    'showers', 'hail', 'rain', 'snow']
 
-  if [m for m in maybe if m in weather]:
-    return ['warn', 'If you have to bike, be careful out there!']
-
-  if [av for av in avoid if av in weather]:
-    return ['avoid', 'I would seriously recommend you do not ride today.']
+  if wind > 20 or temp < 15 or temp > 95:
+    return ['avoid', AVOID]
+  elif [m for m in maybe if m in weather]:
+    return ['warn', WARN]
+  elif [av for av in avoid if av in weather]:
+    return ['avoid', AVOID]
 
 def _get_wear(data):
   temp = data['temp_f']
@@ -55,11 +61,11 @@ def _get_wear(data):
     wear = [HOODIE, LIGHT_J, JEANS]
   elif temp > 48:
     wear = [HOODIE, MED_J, JEANS, GLOVES]
-  elif temp > 34 and wind < 5:
+  elif temp > 38 and wind < 5:
     wear = [HOODIE, MED_J, JEANS, SCARF, GLOVES]
-  elif temp > 34:
+  elif temp > 38:
     wear = [HOODIE, MED_J, JEANS, SCARF, GLOVES, WOOL_H]
-  elif temp > 26 and wind < 5:
+  elif temp > 30 and wind < 5:
     wear = [HEAVY_C, JEANS, SCARF, GLOVES, WOOL_H]
   else:
     wear = [HEAVY_C, GLOVES, SCARF, JEANS, BALACL]
